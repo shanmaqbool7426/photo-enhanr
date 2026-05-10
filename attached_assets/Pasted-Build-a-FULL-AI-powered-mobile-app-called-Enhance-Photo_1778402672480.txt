@@ -1,0 +1,370 @@
+Build a FULL AI-powered mobile app called **“Enhance Photo Quality”** using **React Native + Expo** for frontend and **Node.js + Express + MongoDB** for backend.
+
+The app should allow users to upload blurry, low-quality, old, dark, pixelated, or damaged photos and enhance them using AI.
+
+The app must look modern, premium, fast, and smooth like a real production app.
+
+---
+
+# TECH STACK
+
+## Frontend
+
+* React Native
+* Expo
+* TypeScript
+* React Navigation
+* Zustand or Context API
+* Axios
+* React Native Reanimated
+* Expo Image Picker
+* Expo Media Library
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* JWT Authentication
+* Cloudinary or AWS S3 for image storage
+* Multer for uploads
+
+## AI APIs
+
+Integrate AI image enhancement services such as:
+
+* Replicate AI
+* ClipDrop API
+* Stability AI
+* Remini-style enhancement
+* GFPGAN for face restoration
+* ESRGAN for image upscaling
+
+---
+
+# APP CORE FEATURES
+
+## 1. AI Photo Enhancement
+
+Users can:
+
+* Upload image from gallery
+* Take photo from camera
+* Enhance blurry photos
+* Sharpen image quality
+* Restore old photos
+* Increase resolution
+* Fix noise and grain
+* Improve face quality
+* Brighten dark images
+* Colorize black & white photos
+
+The AI should return:
+
+* Before image
+* After enhanced image
+* HD quality result
+
+---
+
+# 2. AI Enhancement Modes
+
+Create multiple enhancement options:
+
+### Modes:
+
+* HD Enhance
+* Face Enhance
+* Old Photo Restore
+* Remove Blur
+* Low Light Fix
+* Anime Enhance
+* Color Correction
+* Upscale 2x / 4x
+* Skin Smooth
+* Portrait Enhancement
+
+Each mode should use different AI processing logic.
+
+---
+
+# 3. Before / After Slider
+
+Create interactive comparison:
+
+* Drag slider left/right
+* Compare original vs enhanced image
+* Smooth real-time rendering
+
+---
+
+# 4. AI Processing Screen
+
+While processing:
+
+* Show beautiful animation
+* Show percentage progress
+* “AI is enhancing your photo...”
+* Show estimated remaining time
+
+---
+
+# 5. Authentication System
+
+Implement:
+
+* Email signup/login
+* Google login
+* OTP verification
+* Forgot password
+* JWT auth
+
+---
+
+# 6. User Profile
+
+Profile should contain:
+
+* Name
+* Email
+* Profile image
+* Total enhanced photos
+* Subscription status
+* Saved creations
+
+---
+
+# 7. History Section
+
+Store all processed images:
+
+* Original image
+* Enhanced image
+* Date/time
+* AI mode used
+
+Allow:
+
+* Re-download
+* Share
+* Delete history
+
+---
+
+# 8. Export & Sharing
+
+Users can:
+
+* Save HD image
+* Share to WhatsApp
+* Share to Instagram
+* Download without losing quality
+
+---
+
+# 9. Premium Subscription
+
+Add:
+
+* Free credits system
+* Premium plans
+* Unlimited enhancement
+* Faster AI processing
+* No watermark
+
+Integrate:
+
+* Stripe
+* RevenueCat
+* Google Play Billing
+
+---
+
+# 10. Admin Panel Backend
+
+Create admin APIs:
+
+* Manage users
+* Track AI usage
+* Monitor storage
+* Ban users
+* Analytics dashboard
+
+---
+
+# UI / UX DESIGN
+
+The design should feel:
+
+* Ultra modern
+* Dark theme
+* Glassmorphism
+* Smooth animations
+* AI futuristic interface
+
+Include:
+
+* Gradient buttons
+* Premium cards
+* Lottie animations
+* Smooth transitions
+
+---
+
+# MAIN SCREENS
+
+Create these screens:
+
+1. Splash Screen
+2. Onboarding
+3. Login / Signup
+4. Home Dashboard
+5. Upload Screen
+6. AI Mode Selection
+7. Processing Screen
+8. Before/After Compare
+9. History Screen
+10. Profile Screen
+11. Subscription Screen
+12. Settings Screen
+
+---
+
+# BACKEND APIs
+
+Create scalable REST APIs:
+
+## Auth APIs
+
+* Register
+* Login
+* Refresh token
+* Forgot password
+
+## Image APIs
+
+* Upload image
+* Start enhancement
+* Get enhancement status
+* Save result
+* Get history
+
+## Subscription APIs
+
+* Buy plan
+* Verify payment
+* User credits
+
+---
+
+# DATABASE MODELS
+
+## User Model
+
+* name
+* email
+* password
+* credits
+* subscription
+* profileImage
+
+## Enhancement Model
+
+* userId
+* originalImage
+* enhancedImage
+* enhancementType
+* processingTime
+* createdAt
+
+---
+
+# ADVANCED FEATURES
+
+Add advanced AI features:
+
+* Real-time enhancement preview
+* AI face detection
+* Smart crop
+* AI background enhancement
+* Batch image enhancement
+* AI quality score
+* Watermark removal option
+* Auto color balancing
+
+---
+
+# PERFORMANCE
+
+The app must:
+
+* Compress uploads
+* Cache images
+* Lazy load history
+* Use background uploads
+* Handle large images smoothly
+
+---
+
+# SECURITY
+
+Implement:
+
+* JWT authentication
+* API rate limiting
+* Secure image uploads
+* Encrypted tokens
+* Cloud storage security
+
+---
+
+# FOLDER STRUCTURE
+
+Frontend:
+
+* components
+* screens
+* services
+* hooks
+* store
+* navigation
+* utils
+* animations
+
+Backend:
+
+* controllers
+* routes
+* middleware
+* models
+* services
+* uploads
+* AI integrations
+
+---
+
+# EXTRA REQUIREMENTS
+
+The app should feel like:
+
+* Remini
+* Pixelcut
+* Canva AI
+* Adobe Enhance
+
+The code should be:
+
+* Clean
+* Production-ready
+* Scalable
+* Modular
+* Optimized for Android and iPhone
+
+Include:
+
+* Proper error handling
+* Loading states
+* Retry logic
+* Offline handling
+
+Generate FULL project architecture, screens, API structure, database schema, and modern UI design with scalable production-level code.
