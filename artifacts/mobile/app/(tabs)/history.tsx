@@ -12,26 +12,32 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HistoryCard } from "@/components/HistoryCard";
 import { useApp } from "@/contexts/AppContext";
+import { useColors } from "@/hooks/useColors";
 
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
   const { history, removeEnhancement } = useApp();
+  const colors = useColors();
   const topPad = Platform.OS === "web" ? 67 : insets.top;
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: topPad + 16 }]}>
-        <Text style={styles.title}>History</Text>
-        <Text style={styles.subtitle}>
-          {history.length} enhancement{history.length !== 1 ? "s" : ""}
-        </Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { paddingTop: topPad + 16, backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+        <Text style={[styles.title, { color: colors.text }]}>History</Text>
+        <View style={[styles.countPill, { backgroundColor: colors.secondary }]}>
+          <Text style={[styles.countTxt, { color: colors.primary }]}>
+            {history.length} photo{history.length !== 1 ? "s" : ""}
+          </Text>
+        </View>
       </View>
 
       {history.length === 0 ? (
         <View style={styles.empty}>
-          <Feather name="clock" size={52} color="#2a2a4a" />
-          <Text style={styles.emptyTitle}>No enhancements yet</Text>
-          <Text style={styles.emptyText}>
+          <View style={[styles.emptyIcon, { backgroundColor: colors.secondary }]}>
+            <Feather name="clock" size={40} color={colors.primary} />
+          </View>
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>No enhancements yet</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.mutedForeground }]}>
             Your enhanced photos will appear here
           </Text>
         </View>
@@ -39,7 +45,7 @@ export default function HistoryScreen() {
         <FlatList
           data={history}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { paddingBottom: 100 + insets.bottom }]}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <HistoryCard
@@ -47,11 +53,7 @@ export default function HistoryScreen() {
               onPress={() =>
                 router.push({
                   pathname: "/compare",
-                  params: {
-                    beforeUri: item.originalUri,
-                    afterUri: item.enhancedUri,
-                    modeName: item.modeName,
-                  },
+                  params: { beforeUri: item.originalUri, afterUri: item.enhancedUri, modeName: item.modeName },
                 })
               }
               onDelete={() => removeEnhancement(item.id)}
@@ -64,23 +66,14 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#080810" },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1E1E3A",
-  },
-  title: { color: "#fff", fontSize: 28, fontWeight: "800" },
-  subtitle: { color: "#8888BB", fontSize: 14, marginTop: 2 },
-  list: { padding: 16, paddingBottom: 120 },
-  empty: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-    paddingBottom: 80,
-  },
-  emptyTitle: { color: "#fff", fontSize: 20, fontWeight: "700" },
-  emptyText: { color: "#8888BB", fontSize: 14, textAlign: "center" },
+  container:    { flex: 1 },
+  header:       { paddingHorizontal: 20, paddingBottom: 16, borderBottomWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  title:        { fontSize: 28, fontWeight: "800" },
+  countPill:    { borderRadius: 20, paddingHorizontal: 12, paddingVertical: 5 },
+  countTxt:     { fontSize: 13, fontWeight: "700" },
+  list:         { padding: 16 },
+  empty:        { flex: 1, alignItems: "center", justifyContent: "center", gap: 14, paddingBottom: 80 },
+  emptyIcon:    { width: 80, height: 80, borderRadius: 24, alignItems: "center", justifyContent: "center" },
+  emptyTitle:   { fontSize: 20, fontWeight: "700" },
+  emptySubtitle:{ fontSize: 14, textAlign: "center", paddingHorizontal: 40 },
 });

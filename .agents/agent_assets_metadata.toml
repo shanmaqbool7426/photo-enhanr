@@ -6,3 +6,63 @@ id = "Ehn9tV3AHpq-btGIynKxM"
 uri = "file://artifacts/mobile/assets/images/icon.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "lpdK_TZAZiOzmmR-R0wVq"
+uri = "file://artifacts/mobile/assets/images/hero_upload.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "VOzFyi-3k72lg5B1zU-ET"
+uri = "file://artifacts/mobile/assets/images/onboard_1.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "Tpj3vQOjkaqMaZjGYWxq8"
+uri = "file://artifacts/mobile/assets/images/onboard_2.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "MraUAwxBSsE6YJPdFLKk2"
+uri = "file://artifacts/mobile/assets/images/onboard_3.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "lUZAk_rSoKdU4zYpwWZ_h"
+uri = "file://artifacts/mobile/assets/images/mode_hd.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "XfV0NhGCgOewkPLk6N7Mv"
+uri = "file://artifacts/mobile/assets/images/mode_face.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "51nQAF5BWM4YQZn3cxMO-"
+uri = "file://artifacts/mobile/assets/images/mode_restore.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "NzMzmBXK3IcHE_eMplpk7"
+uri = "file://artifacts/mobile/assets/images/mode_blur.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "ZkLa2e9fBXuVbX7nvcWaC"
+uri = "file://artifacts/mobile/assets/images/mode_lowlight.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "pL-KY1pSis6qYfdnoYhZz"
+uri = "file://artifacts/mobile/assets/images/mode_color.png"
+type = "image"
+title = "generated_image"

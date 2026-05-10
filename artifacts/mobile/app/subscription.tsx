@@ -16,32 +16,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { GradientButton } from "@/components/GradientButton";
 import { useApp } from "@/contexts/AppContext";
+import { useColors } from "@/hooks/useColors";
 
-const FREE_FEATURES = [
-  "5 free credits",
-  "Basic HD enhance",
-  "Standard processing speed",
-  "Watermarked exports",
-];
-
-const PRO_FEATURES = [
-  "Unlimited enhancements",
-  "All 10 AI modes",
-  "3x faster processing",
-  "No watermark",
-  "Priority support",
-  "Batch enhancement",
-  "4K export quality",
-];
+const FREE_FEATURES = ["5 free credits", "Basic HD enhance", "Standard speed", "Watermarked exports"];
+const PRO_FEATURES  = ["Unlimited enhancements", "All 10 AI modes", "3× faster processing", "No watermark", "4K export quality", "Priority support", "Batch enhancement"];
 
 const PLANS = [
-  { id: "weekly", label: "Weekly", price: "$2.99", period: "/week", savings: null },
-  { id: "monthly", label: "Monthly", price: "$9.99", period: "/month", savings: "Save 17%" },
-  { id: "yearly", label: "Yearly", price: "$59.99", period: "/year", savings: "Save 50%" },
+  { id: "weekly",  label: "Weekly",  price: "$2.99",  period: "/week",  savings: null },
+  { id: "monthly", label: "Monthly", price: "$9.99",  period: "/month", savings: "Save 17%" },
+  { id: "yearly",  label: "Yearly",  price: "$59.99", period: "/year",  savings: "Best Value 🔥" },
 ];
 
 export default function SubscriptionScreen() {
   const insets = useSafeAreaInsets();
+  const colors = useColors();
   const { upgradeToPremium, user } = useApp();
   const [selectedPlan, setSelectedPlan] = useState("monthly");
   const [loading, setLoading] = useState(false);
@@ -53,119 +41,124 @@ export default function SubscriptionScreen() {
     await new Promise((r) => setTimeout(r, 1500));
     setLoading(false);
     upgradeToPremium();
-    Alert.alert(
-      "Welcome to Premium!",
-      "You now have unlimited enhancements and all AI modes.",
-      [{ text: "Let's Go!", onPress: () => router.back() }]
-    );
+    Alert.alert("Welcome to Premium! ✦", "Enjoy unlimited AI enhancements with all modes.", [
+      { text: "Let's Go!", onPress: () => router.back() },
+    ]);
   };
 
+  const plan = PLANS.find((p) => p.id === selectedPlan)!;
+
   return (
-    <View style={[styles.container, { paddingTop: topPad }]}>
+    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: topPad }]}>
+      {/* ── NAV ── */}
       <View style={styles.navBar}>
-        <Pressable onPress={() => router.back()} style={styles.backBtn}>
-          <Feather name="x" size={20} color="#fff" />
+        <Pressable onPress={() => router.back()} style={[styles.iconBtn, { backgroundColor: colors.card }]}>
+          <Feather name="x" size={20} color={colors.text} />
         </Pressable>
-        <Text style={styles.navTitle}>Premium</Text>
+        <Text style={[styles.navTitle, { color: colors.text }]}>Premium</Text>
         <View style={{ width: 38 }} />
       </View>
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 + insets.bottom }}
-        showsVerticalScrollIndicator={false}
-      >
-        <LinearGradient
-          colors={["#1A0F30", "#080810"]}
-          style={styles.heroSection}
-        >
-          <LinearGradient
-            colors={["#F6D365", "#FDA085"]}
-            style={styles.crownIcon}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <Feather name="zap" size={32} color="#fff" />
-          </LinearGradient>
-          <Text style={styles.heroTitle}>Enhance AI{"\n"}Premium</Text>
-          <Text style={styles.heroSubtitle}>
-            Unlimited AI enhancements with all professional modes
-          </Text>
+      <ScrollView contentContainerStyle={{ paddingBottom: 140 + insets.bottom }} showsVerticalScrollIndicator={false}>
+        {/* ── HERO ── */}
+        <LinearGradient colors={["#6C47FF", "#9B6BFF"]} style={styles.hero} start={{x:0,y:0}} end={{x:1,y:1}}>
+          <View style={styles.crownCircle}>
+            <Feather name="zap" size={28} color="#6C47FF" />
+          </View>
+          <Text style={styles.heroTitle}>Enhance AI Premium</Text>
+          <Text style={styles.heroSub}>Unlimited AI enhancements, all professional modes</Text>
         </LinearGradient>
 
+        {/* ── PLANS ── */}
         <View style={styles.plansSection}>
-          {PLANS.map((plan) => (
+          <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>Choose your plan</Text>
+          {PLANS.map((p) => (
             <Pressable
-              key={plan.id}
-              onPress={() => { Haptics.selectionAsync(); setSelectedPlan(plan.id); }}
-              style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+              key={p.id}
+              onPress={() => { Haptics.selectionAsync(); setSelectedPlan(p.id); }}
+              style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
             >
-              {selectedPlan === plan.id ? (
-                <LinearGradient
-                  colors={["#7B61FF", "#B061FF"]}
-                  style={[styles.planCard, styles.planCardSelected]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                >
-                  <PlanCardContent plan={plan} selected />
-                </LinearGradient>
-              ) : (
-                <View style={styles.planCard}>
-                  <PlanCardContent plan={plan} selected={false} />
+              <View style={[
+                styles.planCard,
+                { backgroundColor: colors.card, borderColor: p.id === selectedPlan ? colors.primary : colors.border },
+                p.id === selectedPlan && styles.planCardActive,
+              ]}>
+                <View>
+                  <Text style={[styles.planLabel, { color: p.id === selectedPlan ? colors.primary : colors.mutedForeground }]}>
+                    {p.label}
+                  </Text>
+                  <View style={styles.priceRow}>
+                    <Text style={[styles.planPrice, { color: colors.text }]}>{p.price}</Text>
+                    <Text style={[styles.planPeriod, { color: colors.mutedForeground }]}>{p.period}</Text>
+                  </View>
                 </View>
-              )}
+                <View style={styles.planRight}>
+                  {p.savings && (
+                    <View style={[styles.savingsBadge, { backgroundColor: p.id === selectedPlan ? colors.primary : colors.secondary }]}>
+                      <Text style={[styles.savingsTxt, { color: p.id === selectedPlan ? "#fff" : colors.primary }]}>
+                        {p.savings}
+                      </Text>
+                    </View>
+                  )}
+                  <View style={[styles.radio, { borderColor: p.id === selectedPlan ? colors.primary : colors.border }]}>
+                    {p.id === selectedPlan && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
+                  </View>
+                </View>
+              </View>
             </Pressable>
           ))}
         </View>
 
-        <View style={styles.featuresSection}>
-          <Text style={styles.featuresTitle}>What's included</Text>
-          <View style={styles.comparisonRow}>
-            <View style={styles.comparisonCol}>
-              <Text style={styles.colTitle}>Free</Text>
+        {/* ── FEATURE COMPARISON ── */}
+        <View style={styles.compareSection}>
+          <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>What's included</Text>
+          <View style={[styles.compareCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <View style={styles.compareCol}>
+              <Text style={[styles.colLabel, { color: colors.mutedForeground }]}>Free</Text>
               {FREE_FEATURES.map((f) => (
                 <View key={f} style={styles.featureRow}>
-                  <Feather name="minus" size={14} color="#8888BB" />
-                  <Text style={styles.featureTextMuted}>{f}</Text>
+                  <Feather name="minus" size={13} color={colors.mutedForeground} />
+                  <Text style={[styles.featureTxt, { color: colors.mutedForeground }]}>{f}</Text>
                 </View>
               ))}
             </View>
-            <View style={styles.dividerV} />
-            <View style={styles.comparisonCol}>
-              <Text style={styles.colTitlePro}>Premium</Text>
+            <View style={[styles.colDivider, { backgroundColor: colors.border }]} />
+            <View style={styles.compareCol}>
+              <Text style={[styles.colLabel, { color: colors.primary }]}>Premium</Text>
               {PRO_FEATURES.map((f) => (
                 <View key={f} style={styles.featureRow}>
-                  <Feather name="check" size={14} color="#43E97B" />
-                  <Text style={styles.featureText}>{f}</Text>
+                  <Feather name="check" size={13} color="#22C55E" />
+                  <Text style={[styles.featureTxt, { color: colors.text }]}>{f}</Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
 
-        <View style={styles.testimonialSection}>
-          <Text style={styles.testimonial}>
-            "Enhance AI transformed my old family photos. The results are incredible!"
+        <View style={[styles.testimonial, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Text style={[styles.quote, { color: colors.text }]}>
+            "Enhance AI transformed my old family photos. The results are absolutely incredible!"
           </Text>
-          <Text style={styles.testimonialAuthor}>— Sarah M.</Text>
+          <Text style={[styles.author, { color: colors.mutedForeground }]}>— Sarah M. ⭐⭐⭐⭐⭐</Text>
         </View>
       </ScrollView>
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
+      {/* ── STICKY FOOTER ── */}
+      <View style={[styles.footer, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16, borderTopColor: colors.border }]}>
         {user.isPremium ? (
           <View style={styles.alreadyPro}>
-            <Feather name="check-circle" size={20} color="#43E97B" />
-            <Text style={styles.alreadyProText}>You are already on Premium!</Text>
+            <Feather name="check-circle" size={20} color="#22C55E" />
+            <Text style={[styles.alreadyTxt, { color: "#22C55E" }]}>You already have Premium!</Text>
           </View>
         ) : (
           <>
             <GradientButton
-              label={loading ? "Processing..." : "Start Premium — " + PLANS.find((p) => p.id === selectedPlan)?.price}
+              label={loading ? "Processing..." : `Start Premium — ${plan.price}${plan.period}`}
               onPress={handlePurchase}
-              gradient={["#F6D365", "#FDA085"]}
               loading={loading}
               size="lg"
             />
-            <Text style={styles.cancelText}>Cancel anytime · No commitment</Text>
+            <Text style={[styles.cancelTxt, { color: colors.mutedForeground }]}>Cancel anytime · No commitment</Text>
           </>
         )}
       </View>
@@ -173,159 +166,40 @@ export default function SubscriptionScreen() {
   );
 }
 
-function PlanCardContent({ plan, selected }: { plan: typeof PLANS[0]; selected: boolean }) {
-  return (
-    <View style={styles.planCardInner}>
-      <View>
-        <Text style={[styles.planLabel, selected && styles.planLabelSelected]}>
-          {plan.label}
-        </Text>
-        <View style={styles.planPriceRow}>
-          <Text style={[styles.planPrice, selected && styles.planPriceSelected]}>
-            {plan.price}
-          </Text>
-          <Text style={[styles.planPeriod, selected && styles.planPeriodSelected]}>
-            {plan.period}
-          </Text>
-        </View>
-      </View>
-      {plan.savings && (
-        <View style={[styles.savingsBadge, selected && styles.savingsBadgeSelected]}>
-          <Text style={[styles.savingsText, selected && styles.savingsTextSelected]}>
-            {plan.savings}
-          </Text>
-        </View>
-      )}
-      {selected && (
-        <View style={styles.checkCircle}>
-          <Feather name="check" size={12} color="#7B61FF" />
-        </View>
-      )}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#080810" },
-  navBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-  },
-  backBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "#14142A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  navTitle: { color: "#fff", fontSize: 17, fontWeight: "700" },
-  heroSection: {
-    alignItems: "center",
-    paddingHorizontal: 32,
-    paddingVertical: 32,
-    gap: 12,
-  },
-  crownIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 4,
-    shadowColor: "#F6D365",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 12,
-  },
-  heroTitle: {
-    color: "#fff",
-    fontSize: 30,
-    fontWeight: "800",
-    textAlign: "center",
-    lineHeight: 36,
-  },
-  heroSubtitle: { color: "#8888BB", fontSize: 15, textAlign: "center", lineHeight: 22 },
-  plansSection: { padding: 16, gap: 10 },
-  planCard: {
-    backgroundColor: "#10101E",
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: "#1E1E3A",
-    overflow: "hidden",
-  },
-  planCardSelected: { borderColor: "transparent" },
-  planCardInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 16,
-  },
-  planLabel: { color: "#8888BB", fontSize: 13, fontWeight: "600", marginBottom: 4 },
-  planLabelSelected: { color: "rgba(255,255,255,0.8)" },
-  planPriceRow: { flexDirection: "row", alignItems: "baseline", gap: 2 },
-  planPrice: { color: "#fff", fontSize: 22, fontWeight: "800" },
-  planPriceSelected: { color: "#fff" },
-  planPeriod: { color: "#8888BB", fontSize: 13 },
-  planPeriodSelected: { color: "rgba(255,255,255,0.7)" },
-  savingsBadge: {
-    backgroundColor: "#1E1E3A",
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  savingsBadgeSelected: { backgroundColor: "rgba(255,255,255,0.2)" },
-  savingsText: { color: "#7B61FF", fontSize: 12, fontWeight: "700" },
-  savingsTextSelected: { color: "#fff" },
-  checkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  featuresSection: { padding: 16 },
-  featuresTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 16 },
-  comparisonRow: {
-    flexDirection: "row",
-    backgroundColor: "#10101E",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#1E1E3A",
-    padding: 16,
-    gap: 16,
-  },
-  comparisonCol: { flex: 1, gap: 10 },
-  dividerV: { width: 1, backgroundColor: "#1E1E3A" },
-  colTitle: { color: "#8888BB", fontSize: 14, fontWeight: "700", marginBottom: 4 },
-  colTitlePro: { color: "#7B61FF", fontSize: 14, fontWeight: "700", marginBottom: 4 },
-  featureRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  featureText: { color: "#fff", fontSize: 13, flex: 1 },
-  featureTextMuted: { color: "#8888BB", fontSize: 13, flex: 1 },
-  testimonialSection: {
-    margin: 16,
-    padding: 20,
-    backgroundColor: "#10101E",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#1E1E3A",
-    gap: 8,
-  },
-  testimonial: { color: "#ccc", fontSize: 14, lineHeight: 22, fontStyle: "italic" },
-  testimonialAuthor: { color: "#8888BB", fontSize: 13, fontWeight: "600" },
-  footer: { padding: 16, gap: 10, borderTopWidth: 1, borderTopColor: "#1E1E3A" },
-  alreadyPro: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    paddingVertical: 16,
-  },
-  alreadyProText: { color: "#43E97B", fontSize: 16, fontWeight: "700" },
-  cancelText: { color: "#8888BB", fontSize: 13, textAlign: "center" },
+  container:     { flex: 1 },
+  navBar:        { flexDirection:"row", alignItems:"center", justifyContent:"space-between", paddingHorizontal:16, paddingBottom:12 },
+  iconBtn:       { width:38, height:38, borderRadius:19, alignItems:"center", justifyContent:"center", shadowColor:"#000", shadowOffset:{width:0,height:1}, shadowOpacity:0.06, shadowRadius:4, elevation:2 },
+  navTitle:      { fontSize:17, fontWeight:"700" },
+  hero:          { margin:16, borderRadius:24, padding:28, alignItems:"center", gap:10 },
+  crownCircle:   { width:64, height:64, borderRadius:20, backgroundColor:"#fff", alignItems:"center", justifyContent:"center", marginBottom:4 },
+  heroTitle:     { color:"#fff", fontSize:22, fontWeight:"800", textAlign:"center" },
+  heroSub:       { color:"rgba(255,255,255,0.8)", fontSize:14, textAlign:"center" },
+  plansSection:  { paddingHorizontal:16, gap:10, marginBottom:16 },
+  sectionLabel:  { fontSize:13, fontWeight:"600", marginBottom:4 },
+  planCard:      { borderRadius:16, borderWidth:2, padding:16, flexDirection:"row", alignItems:"center", justifyContent:"space-between", shadowColor:"#000", shadowOffset:{width:0,height:2}, shadowOpacity:0.05, shadowRadius:6, elevation:2 },
+  planCardActive:{ shadowColor:"#6C47FF", shadowOpacity:0.15 },
+  planLabel:     { fontSize:13, fontWeight:"600", marginBottom:4 },
+  priceRow:      { flexDirection:"row", alignItems:"baseline", gap:2 },
+  planPrice:     { fontSize:22, fontWeight:"800" },
+  planPeriod:    { fontSize:13 },
+  planRight:     { flexDirection:"row", alignItems:"center", gap:10 },
+  savingsBadge:  { borderRadius:20, paddingHorizontal:10, paddingVertical:4 },
+  savingsTxt:    { fontSize:11, fontWeight:"700" },
+  radio:         { width:22, height:22, borderRadius:11, borderWidth:2, alignItems:"center", justifyContent:"center" },
+  radioDot:      { width:12, height:12, borderRadius:6 },
+  compareSection:{ paddingHorizontal:16, marginBottom:16 },
+  compareCard:   { borderRadius:20, borderWidth:1, padding:16, flexDirection:"row", gap:16 },
+  compareCol:    { flex:1, gap:8 },
+  colDivider:    { width:1 },
+  colLabel:      { fontSize:14, fontWeight:"700", marginBottom:4 },
+  featureRow:    { flexDirection:"row", alignItems:"center", gap:6 },
+  featureTxt:    { fontSize:12, flex:1 },
+  testimonial:   { margin:16, borderRadius:16, borderWidth:1, padding:16, gap:8 },
+  quote:         { fontSize:14, lineHeight:21, fontStyle:"italic" },
+  author:        { fontSize:12, fontWeight:"600" },
+  footer:        { padding:16, gap:8, borderTopWidth:1 },
+  alreadyPro:    { flexDirection:"row", alignItems:"center", justifyContent:"center", gap:8, paddingVertical:16 },
+  alreadyTxt:    { fontSize:16, fontWeight:"700" },
+  cancelTxt:     { fontSize:13, textAlign:"center" },
 });

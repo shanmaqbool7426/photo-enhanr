@@ -16,40 +16,37 @@ import { GradientButton } from "@/components/GradientButton";
 import { ModeCard } from "@/components/ModeCard";
 import { MODES } from "@/app/(tabs)/index";
 import { useApp } from "@/contexts/AppContext";
+import { useColors } from "@/hooks/useColors";
 
 export default function ModesScreen() {
   const insets = useSafeAreaInsets();
   const { imageUri, modeId } = useLocalSearchParams<{ imageUri: string; modeId?: string }>();
   const { user } = useApp();
+  const colors = useColors();
   const [selectedId, setSelectedId] = useState<string>(modeId ?? MODES[0].id);
   const topPad = Platform.OS === "web" ? 67 : insets.top;
 
   const selectedMode = MODES.find((m) => m.id === selectedId) ?? MODES[0];
+  const isLocked = !!selectedMode.isPremium && !user.isPremium;
 
   const handleStart = () => {
-    if (selectedMode.isPremium && !user.isPremium) {
-      router.push("/subscription");
-      return;
-    }
+    if (isLocked) { router.push("/subscription"); return; }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    router.push({
-      pathname: "/processing",
-      params: { imageUri, modeId: selectedId, modeName: selectedMode.name },
-    });
+    router.push({ pathname: "/processing", params: { imageUri, modeId: selectedId, modeName: selectedMode.name } });
   };
 
   return (
-    <View style={[styles.container, { paddingTop: topPad }]}>
+    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: topPad }]}>
       <View style={styles.navBar}>
-        <Pressable onPress={() => router.back()} style={styles.backBtn}>
-          <Feather name="arrow-left" size={20} color="#fff" />
+        <Pressable onPress={() => router.back()} style={[styles.backBtn, { backgroundColor: colors.card }]}>
+          <Feather name="arrow-left" size={20} color={colors.text} />
         </Pressable>
-        <Text style={styles.navTitle}>Enhancement Mode</Text>
+        <Text style={[styles.navTitle, { color: colors.text }]}>Enhancement Mode</Text>
         <View style={{ width: 38 }} />
       </View>
 
-      <Text style={styles.subtitle}>
-        Select how you want to enhance your photo
+      <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
+        Select how you'd like to enhance your photo
       </Text>
 
       <FlatList
@@ -62,31 +59,22 @@ export default function ModesScreen() {
           <ModeCard
             mode={item}
             selected={item.id === selectedId}
-            onPress={() => {
-              Haptics.selectionAsync();
-              setSelectedId(item.id);
-            }}
+            onPress={() => { Haptics.selectionAsync(); setSelectedId(item.id); }}
           />
         )}
       />
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
-        {selectedMode.isPremium && !user.isPremium && (
-          <View style={styles.premiumNotice}>
-            <Feather name="lock" size={14} color="#F6D365" />
-            <Text style={styles.premiumNoticeText}>
-              {selectedMode.name} requires Premium
-            </Text>
+      <View style={[styles.footer, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16 }]}>
+        {isLocked && (
+          <View style={styles.lockRow}>
+            <Feather name="lock" size={13} color="#F59E0B" />
+            <Text style={styles.lockTxt}>{selectedMode.name} requires Premium</Text>
           </View>
         )}
         <GradientButton
-          label={selectedMode.isPremium && !user.isPremium ? "Unlock with Premium" : `Start ${selectedMode.name}`}
+          label={isLocked ? "Unlock with Premium ✦" : `Enhance with ${selectedMode.name}`}
           onPress={handleStart}
-          gradient={
-            selectedMode.isPremium && !user.isPremium
-              ? ["#F6D365", "#FDA085"]
-              : selectedMode.gradient
-          }
+          gradient={isLocked ? ["#F59E0B", "#F97316"] : ["#6C47FF", "#9B6BFF"]}
           size="lg"
           style={{ width: "100%" }}
         />
@@ -96,42 +84,13 @@ export default function ModesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#080810" },
-  navBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "#14142A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  navTitle: { color: "#fff", fontSize: 17, fontWeight: "700" },
-  subtitle: {
-    color: "#8888BB",
-    fontSize: 14,
-    paddingHorizontal: 20,
-    marginBottom: 4,
-  },
-  grid: {
-    padding: 10,
-    paddingBottom: 8,
-  },
-  footer: {
-    padding: 16,
-    gap: 10,
-  },
-  premiumNotice: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-  },
-  premiumNoticeText: { color: "#F6D365", fontSize: 13, fontWeight: "600" },
+  container: { flex: 1 },
+  navBar:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingBottom: 4 },
+  backBtn:   { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2 },
+  navTitle:  { fontSize: 17, fontWeight: "700" },
+  subtitle:  { paddingHorizontal: 20, marginBottom: 4, fontSize: 14 },
+  grid:      { padding: 10, paddingBottom: 8 },
+  footer:    { padding: 16, gap: 10, shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 8 },
+  lockRow:   { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  lockTxt:   { color: "#F59E0B", fontSize: 13, fontWeight: "600" },
 });
